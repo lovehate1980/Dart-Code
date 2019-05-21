@@ -7,7 +7,7 @@ import { doNotAskAgainAction, flutterSurvey2019Q2PromptWithAnalytics, flutterSur
 import { Context } from "./context";
 import { flutterExtensionIdentifier, isWin, LogCategory, LogSeverity } from "./debug/utils";
 import { StagehandTemplate } from "./pub/stagehand";
-import { DART_STAGEHAND_PROJECT_TRIGGER_FILE, extensionVersion, FLUTTER_CREATE_PROJECT_TRIGGER_FILE, FLUTTER_STAGEHAND_PROJECT_TRIGGER_FILE, fsPath, getDartWorkspaceFolders, hasFlutterExtension, isDevExtension, openInBrowser, reloadExtension, WorkspaceContext } from "./utils";
+import { DART_STAGEHAND_PROJECT_TRIGGER_FILE, envUtils, extensionVersion, FLUTTER_CREATE_PROJECT_TRIGGER_FILE, FLUTTER_STAGEHAND_PROJECT_TRIGGER_FILE, fsPath, getDartWorkspaceFolders, hasFlutterExtension, isDevExtension, reloadExtension, WorkspaceContext } from "./utils";
 import { log, logWarn } from "./utils/log";
 
 const promptPrefix = "hasPrompted.";
@@ -100,14 +100,14 @@ export function showFlutter2019Q2SurveyNotificationIfAppropriate(context: Contex
 	context.flutterSurvey2019Q2NotificationLastShown = Date.now();
 
 	// Prompt to show and handle response.
-	vs.window.showInformationMessage(prompt, takeSurveyAction, doNotAskAgainAction).then((choice) => {
+	vs.window.showInformationMessage(prompt, takeSurveyAction, doNotAskAgainAction).then(async (choice) => {
 		if (choice === doNotAskAgainAction) {
 			context.flutterSurvey2019Q2NotificationDoNotShow = true;
 		} else if (choice === takeSurveyAction) {
 			// Mark as do-not-show-again if they answer it, since it seems silly
 			// to show them again if they already completed it.
 			context.flutterSurvey2019Q2NotificationDoNotShow = true;
-			openInBrowser(surveyUrl);
+			await envUtils.openInBrowser(surveyUrl);
 		}
 	});
 
@@ -174,7 +174,7 @@ async function promptToShowReleaseNotes(versionDisplay: string, versionLink: str
 		`Show Release Notes`,
 	);
 	if (res) {
-		openInBrowser(`https://dartcode.org/releases/v${versionLink}/`);
+		await envUtils.openInBrowser(`https://dartcode.org/releases/v${versionLink}/`);
 	}
 	return true; // Always mark this as done; we don't want to prompt the user multiple times.
 }

@@ -4,7 +4,7 @@ import { noRepeatPromptThreshold, pubGlobalDocsUrl } from "../constants";
 import { Context } from "../context";
 import { LogCategory } from "../debug/utils";
 import { pubPath } from "../sdk/utils";
-import { openInBrowser, Sdks, versionIsAtLeast } from "../utils";
+import { envUtils, Sdks, versionIsAtLeast } from "../utils";
 import { fetch } from "../utils/fetch";
 import { logWarn } from "../utils/log";
 import { safeSpawn } from "../utils/processes";
@@ -35,7 +35,7 @@ export class PubGlobal {
 				: await vs.window.showWarningMessage(message, activateForMe, moreInfo);
 
 		if (action === moreInfo) {
-			openInBrowser(moreInfoLink);
+			await envUtils.openInBrowser(moreInfoLink);
 			return false;
 		} else if (action === activateForMe) {
 			const actionName = versionStatus === VersionStatus.NotInstalled ? `Activating ${packageName}` : `Updating ${packageName}`;
@@ -47,7 +47,7 @@ export class PubGlobal {
 			} else {
 				action = await vs.window.showErrorMessage(`${actionName} failed. Please try running 'pub global activate ${packageID}' manually.`, moreInfo);
 				if (action === moreInfo) {
-					openInBrowser(moreInfoLink);
+					await envUtils.openInBrowser(moreInfoLink);
 				}
 				return false;
 			}

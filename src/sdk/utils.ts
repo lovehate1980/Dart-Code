@@ -5,7 +5,7 @@ import { Analytics } from "../analytics";
 import { config } from "../config";
 import { PackageMap } from "../debug/package_map";
 import { dartPlatformName, flatMap, isWin } from "../debug/utils";
-import { FLUTTER_CREATE_PROJECT_TRIGGER_FILE, FLUTTER_STAGEHAND_PROJECT_TRIGGER_FILE, fsPath, getDartWorkspaceFolders, getSdkVersion, openExtensionLogFile, openInBrowser, reloadExtension, resolvePaths, showLogAction, WorkspaceContext } from "../utils";
+import { envUtils, FLUTTER_CREATE_PROJECT_TRIGGER_FILE, FLUTTER_STAGEHAND_PROJECT_TRIGGER_FILE, fsPath, getDartWorkspaceFolders, getSdkVersion, openExtensionLogFile, reloadExtension, resolvePaths, showLogAction, WorkspaceContext } from "../utils";
 import { getChildFolders, hasPubspec } from "../utils/fs";
 import { log } from "../utils/log";
 
@@ -133,7 +133,7 @@ export async function showSdkActivationFailure(
 				}
 			}
 		} else if (selectedItem === downloadAction) {
-			openInBrowser(downloadUrl);
+			await envUtils.openInBrowser(downloadUrl);
 			break;
 		} else if (selectedItem === showLogAction) {
 			openExtensionLogFile();

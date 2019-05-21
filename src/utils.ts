@@ -4,7 +4,7 @@ import * as https from "https";
 import * as os from "os";
 import * as path from "path";
 import * as semver from "semver";
-import { commands, extensions, Position, Range, TextDocument, Uri, window, workspace, WorkspaceFolder } from "vscode";
+import { commands, env as vsCodeEnv, extensions, Position, Range, TextDocument, Uri, window, workspace, WorkspaceFolder } from "vscode";
 import { config } from "./config";
 import { flutterExtensionIdentifier, forceWindowsDriveLetterToUppercase, isWithinPath } from "./debug/utils";
 import { locateBestProjectRoot } from "./project";
@@ -292,12 +292,13 @@ export function escapeShell(args: string[]) {
 	return ret.join(" ");
 }
 
-export function openInBrowser(url: string) {
-	// Don't use vs.env.openExternal unless
-	// https://github.com/Microsoft/vscode/issues/69608
-	// is fixed, as it complicates testing.
-	commands.executeCommand("vscode.open", Uri.parse(url));
+class EnvUtils {
+	public async openInBrowser(url: string): Promise<boolean> {
+		return vsCodeEnv.openExternal(Uri.parse(url));
+	}
 }
+
+export const envUtils = new EnvUtils();
 
 export class WorkspaceContext {
 	// TODO: Move things from Sdks to this class that aren't related to the SDKs.

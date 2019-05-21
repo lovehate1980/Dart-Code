@@ -9,7 +9,7 @@ import { DebuggerType } from "../providers/debug_config_provider";
 import { PubGlobal } from "../pub/global";
 import { DevToolsManager } from "../sdk/dev_tools";
 import { showDevToolsNotificationIfAppropriate } from "../user_prompts";
-import { fsPath, getDartWorkspaceFolders, openInBrowser, WorkspaceContext } from "../utils";
+import { envUtils, fsPath, getDartWorkspaceFolders, WorkspaceContext } from "../utils";
 import { handleDebugLogEvent, logInfo, logWarn } from "../utils/log";
 import { DartDebugSessionInformation } from "../utils/vscode/debug";
 
@@ -70,7 +70,7 @@ export class DebugCommands {
 				? debugSessions[0]
 				: await this.promptForDebugSession();
 			if (session && !session.session.configuration.noDebug && session.observatoryUri) {
-				openInBrowser(session.observatoryUri);
+				await envUtils.openInBrowser(session.observatoryUri);
 				analytics.logDebuggerOpenObservatory();
 			} else if (session) {
 				logWarn("Cannot start Observatory for session without debug/observatoryUri");
@@ -83,7 +83,7 @@ export class DebugCommands {
 				? debugSessions[0]
 				: await this.promptForDebugSession();
 			if (session && !session.session.configuration.noDebug && session.observatoryUri) {
-				openInBrowser(session.observatoryUri + "/#/timeline-dashboard");
+				await envUtils.openInBrowser(session.observatoryUri + "/#/timeline-dashboard");
 				analytics.logDebuggerOpenTimeline();
 			} else if (session) {
 				logWarn("Cannot start Observatory for session without debug/observatoryUri");
