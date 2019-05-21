@@ -288,6 +288,8 @@ describe("flutter for web debugger", () => {
 			return;
 		}
 
+		// const openBrowserCommand = sb.stub(envUtils, "openInBrowser").resolves();
+
 		const config = await startDebugger(flutterWebHelloWorldMainFile);
 		await Promise.all([
 			dc.configurationSequence(),
@@ -295,6 +297,7 @@ describe("flutter for web debugger", () => {
 		]);
 
 		const devTools = await vs.commands.executeCommand("dart.openDevTools") as { url: string, dispose: () => void };
+		// assert.ok(openBrowserCommand.calledOnce);
 		assert.ok(devTools);
 		assert.ok(devTools.url);
 		defer(devTools.dispose);
