@@ -39,7 +39,7 @@ import { DaemonCapabilities, FlutterDaemon } from "./flutter/flutter_daemon";
 import { setUpHotReloadOnSave } from "./flutter/hot_reload_save_handler";
 import { getWorkspaceProjectFolders } from "./project";
 import { AssistCodeActionProvider } from "./providers/assist_code_action_provider";
-import { DartCompletionItemProvider } from "./providers/dart_completion_item_provider";
+import { FakeCompletionItemProvider } from "./providers/dart_completion_item_provider";
 import { DartDiagnosticProvider } from "./providers/dart_diagnostic_provider";
 import { DartDocumentSymbolProvider } from "./providers/dart_document_symbol_provider";
 import { DartFoldingProvider } from "./providers/dart_folding_provider";
@@ -58,7 +58,6 @@ import { IgnoreLintCodeActionProvider } from "./providers/ignore_lint_code_actio
 import { LegacyDartWorkspaceSymbolProvider } from "./providers/legacy_dart_workspace_symbol_provider";
 import { RankingCodeActionProvider } from "./providers/ranking_code_action_provider";
 import { RefactorCodeActionProvider } from "./providers/refactor_code_action_provider";
-import { SnippetCompletionItemProvider } from "./providers/snippet_completion_item_provider";
 import { SourceCodeActionProvider } from "./providers/source_code_action_provider";
 import { PubBuildRunnerTaskProvider } from "./pub/build_runner_task_provider";
 import { PubGlobal } from "./pub/global";
@@ -201,7 +200,7 @@ export function activate(context: vs.ExtensionContext, isRestart: boolean = fals
 	const hoverProvider = new DartHoverProvider(analyzer);
 	const formattingEditProvider = new DartFormattingEditProvider(analyzer, extContext);
 	context.subscriptions.push(formattingEditProvider);
-	const completionItemProvider = new DartCompletionItemProvider(analyzer);
+	const completionItemProvider = new FakeCompletionItemProvider();//DartCompletionItemProvider(analyzer);
 	const referenceProvider = new DartReferenceProvider(analyzer);
 	const documentHighlightProvider = new DartDocumentHighlightProvider(analyzer);
 	const sourceCodeActionProvider = new SourceCodeActionProvider();
@@ -252,8 +251,8 @@ export function activate(context: vs.ExtensionContext, isRestart: boolean = fals
 	}
 
 	// Snippets are language-specific
-	context.subscriptions.push(vs.languages.registerCompletionItemProvider(DART_MODE, new SnippetCompletionItemProvider("snippets/dart.json", (_) => true)));
-	context.subscriptions.push(vs.languages.registerCompletionItemProvider(DART_MODE, new SnippetCompletionItemProvider("snippets/flutter.json", (uri) => util.isInsideFlutterProject(uri) || util.isInsideFlutterWebProject(uri))));
+	// context.subscriptions.push(vs.languages.registerCompletionItemProvider(DART_MODE, new SnippetCompletionItemProvider("snippets/dart.json", (_) => true)));
+	// context.subscriptions.push(vs.languages.registerCompletionItemProvider(DART_MODE, new SnippetCompletionItemProvider("snippets/flutter.json", (uri) => util.isInsideFlutterProject(uri) || util.isInsideFlutterWebProject(uri))));
 
 	context.subscriptions.push(vs.languages.setLanguageConfiguration(DART_MODE.language, new DartLanguageConfiguration()));
 	const statusReporter = new AnalyzerStatusReporter(analyzer, workspaceContext, analytics);

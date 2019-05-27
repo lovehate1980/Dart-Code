@@ -11,6 +11,32 @@ import { cleanDartdoc } from "../dartdocs";
 import { IAmDisposable } from "../debug/utils";
 import { logError, logWarn } from "../utils/log";
 
+export class FakeCompletionItemProvider implements CompletionItemProvider {
+	public async provideCompletionItems(
+		document: TextDocument, position: Position, token: CancellationToken, context: CompletionContext,
+	): Promise<CompletionList> {
+
+		const items: CompletionItem[] = Array<CompletionItem>(20000);
+		for (let i = 0; i < items.length; i++) {
+			const item = new CompletionItem(`Item ${i}`);
+			item.filterText = `${item.label}???`;
+			item.kind = CompletionItemKind.Constant;
+			item.detail = "(deprecated)";
+			item.documentation = "docs";
+			item.insertText = `${item.label} !!`;
+			item.keepWhitespace = true;
+			item.commitCharacters = ["["];
+
+			item.command = {
+				command: "editor.action.triggerSuggest",
+				title: "Suggest",
+			};
+			items[i] = item;
+		}
+		return new CompletionList(items);
+	}
+}
+
 export class DartCompletionItemProvider implements CompletionItemProvider, IAmDisposable {
 	private disposables: Disposable[] = [];
 	private cachedSuggestions: { [key: number]: CachedSuggestionSet } = {};
@@ -44,6 +70,7 @@ export class DartCompletionItemProvider implements CompletionItemProvider, IAmDi
 
 		const allResults = [...includedResults, ...cachedResults];
 
+		console.log(allResults.length);
 		return new CompletionList(allResults);
 	}
 
@@ -191,6 +218,14 @@ export class DartCompletionItemProvider implements CompletionItemProvider, IAmDi
 						0,
 						0,
 					);
+
+					// failed?
+					// completionItem.document = document;
+					// completionItem.filePath = filePath;
+					// completionItem.offset = offset;
+					// completionItem.suggestion = suggestion;
+					// completionItem.suggestionSetID = includedSuggestionSet.id;
+					// return completionItem;
 
 					// Add additional info that resolve will need.
 					return {
