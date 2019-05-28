@@ -35,6 +35,10 @@ export class FakeCompletionItemProvider implements CompletionItemProvider {
 		}
 		return new CompletionList(items);
 	}
+
+	public async resolveCompletionItem(item: DelayedCompletionItem, token: CancellationToken): Promise<CompletionItem | undefined> {
+		return undefined;
+	}
 }
 
 export class DartCompletionItemProvider implements CompletionItemProvider, IAmDisposable {
