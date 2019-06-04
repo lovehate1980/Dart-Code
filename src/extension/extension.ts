@@ -41,6 +41,7 @@ import { setUpDaemonMessageHandler } from "./flutter/daemon_message_handler";
 import { DaemonCapabilities, FlutterDaemon } from "./flutter/flutter_daemon";
 import { setUpHotReloadOnSave } from "./flutter/hot_reload_save_handler";
 import { LspAnalyzerStatusReporter } from "./lsp/analyzer_status_reporter";
+import { LspClosingLabelsDecorations } from "./lsp/closing_labels_decorations";
 import { initLSP, lspClient } from "./lsp/setup";
 import { getWorkspaceProjectFolders } from "./project";
 import { AssistCodeActionProvider } from "./providers/assist_code_action_provider";
@@ -165,6 +166,10 @@ export function activate(context: vs.ExtensionContext, isRestart: boolean = fals
 	if (config.previewLsp && config.previewLspArgs && config.previewLspArgs.length) {
 		context.subscriptions.push(initLSP(context, sdks));
 		isUsingLsp = true;
+	}
+
+	if (isUsingLsp) {
+		context.subscriptions.push(new LspClosingLabelsDecorations(lspClient));
 	}
 
 	// Fire up the analyzer process.
@@ -326,7 +331,7 @@ export function activate(context: vs.ExtensionContext, isRestart: boolean = fals
 	const connectedSetup = analyzer.registerForServerConnected((sc) => {
 		connectedSetup.dispose();
 
-		if (analyzer.capabilities.supportsClosingLabels && config.closingLabels) {
+		if (analyzer.capabilities.supportsClosingLabels && config.closingLabels && !isUsingLsp) {
 			context.subscriptions.push(new ClosingLabelsDecorations(analyzer));
 		}
 
