@@ -23,6 +23,7 @@ export class DaemonCapabilities {
 
 	get canCreateEmulators() { return versionIsAtLeast(this.version, "0.4.0"); }
 	get canFlutterAttach() { return versionIsAtLeast(this.version, "0.4.1"); }
+	get canCheckSupportedPlatforms() { return versionIsAtLeast(this.version, "0.5.0"); }
 }
 
 export class FlutterDaemon extends StdIOService<UnknownNotification> {

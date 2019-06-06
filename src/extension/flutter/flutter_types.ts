@@ -3,6 +3,17 @@ export interface Device {
 	name: string;
 	platform: string;
 	emulator: boolean;
+	type: "device";
+}
+
+export interface Emulator {
+	id: string;
+	name: string;
+	type: "emulator";
+}
+
+export interface EmulatorCreator {
+	type: "emulator-creator";
 }
 
 export interface DaemonConnected {
