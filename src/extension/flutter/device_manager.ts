@@ -201,17 +201,17 @@ export class FlutterDeviceManager implements vs.Disposable {
 		}
 	}
 
-	private async getEmulatorItems(showOfflineStatus: boolean): Promise<PickableDevice[]> {
+	private async getEmulatorItems(showLaunchPrefix: boolean): Promise<PickableDevice[]> {
 		const emulators: PickableDevice[] = (await this.getEmulators())
 			.map((e) => ({
 				alwaysShow: false,
-				description: showOfflineStatus ? "Emulator (offline)" : e.id,
+				description: e.id,
 				device: {
 					id: e.id,
 					name: e.name,
 					type: "emulator",
 				},
-				label: e.name,
+				label: showLaunchPrefix ? `Launch ${e.name}` : e.name,
 			}));
 		// Add an option to create a new emulator if the daemon supports it.
 		if (this.daemon.capabilities.canCreateEmulators) {
