@@ -64,3 +64,7 @@ export interface ShowMessage {
 	title: string;
 	message: string;
 }
+
+export interface SupportedPlatformsResponse {
+	platforms: string[];
+}

@@ -176,6 +176,10 @@ export class FlutterDaemon extends StdIOService<UnknownNotification> {
 		return this.sendRequest("emulator.create", { name });
 	}
 
+	public getSupportedPlatforms(projectRoot: string): Thenable<f.SupportedPlatformsResponse> {
+		return this.sendRequest("daemon.getSupportedPlatforms", { projectRoot });
+	}
+
 	// Subscription methods.
 
 	public registerForDaemonConnected(subscriber: (notification: f.DaemonConnected) => void): vs.Disposable {

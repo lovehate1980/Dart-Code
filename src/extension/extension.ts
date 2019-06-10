@@ -289,7 +289,7 @@ export function activate(context: vs.ExtensionContext, isRestart: boolean = fals
 	const pubGlobal = new PubGlobal(extContext, sdks);
 
 	// Set up debug stuff.
-	const debugProvider = new DebugConfigProvider(sdks, analytics, pubGlobal, flutterDaemon && flutterDaemon.deviceManager, flutterCapabilities);
+	const debugProvider = new DebugConfigProvider(sdks, analytics, pubGlobal, flutterDaemon, flutterCapabilities);
 	context.subscriptions.push(vs.debug.registerDebugConfigurationProvider("dart", debugProvider));
 	context.subscriptions.push(debugProvider);
 
