@@ -522,6 +522,7 @@ export function activate(context: vs.ExtensionContext, isRestart: boolean = fals
 			getLogHeader,
 			initialAnalysis,
 			logger,
+			lspClient,
 			nextAnalysis,
 			packagesTreeProvider: dartPackagesProvider,
 			pubGlobal,
